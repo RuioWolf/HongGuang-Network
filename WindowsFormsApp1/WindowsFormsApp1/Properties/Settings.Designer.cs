@@ -34,5 +34,17 @@ namespace WindowsFormsApp1.Properties {
                 this["pl"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string ftr {
+            get {
+                return ((string)(this["ftr"]));
+            }
+            set {
+                this["ftr"] = value;
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace WindowsFormsApp1
 
         public void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if(int.Parse(textBox1.Text)>=0&&int.Parse(textBox1.Text)<=100&&!string.IsNullOrEmpty(textBox1.Text))
+            if(int.Parse(textBox1.Text)>=0&&int.Parse(textBox1.Text)<=1000&&!string.IsNullOrEmpty(textBox1.Text))
             {
                 Properties.Settings.Default.pl = textBox1.Text;
                 Properties.Settings.Default.Save();
@@ -35,7 +35,7 @@ namespace WindowsFormsApp1
             }
             else
             {
-                MessageBox.Show("错误的数值 必须设置在0-100之间");
+                MessageBox.Show("错误的数值 必须设置在0-1000之间");
             }
         }
 
@@ -49,6 +49,12 @@ namespace WindowsFormsApp1
 #if(DEBUG)
             textBox2.Text = "DEBUG";
 #endif
+            if(Properties.Settings.Default.ftr=="1")
+            {
+                MessageBox.Show("软件开源免费且仅用于学习交流");
+                Properties.Settings.Default.ftr = "0";
+                Properties.Settings.Default.Save();
+            }
         }
 
         public void textBox1_KeyPress(object sender, KeyPressEventArgs e)
