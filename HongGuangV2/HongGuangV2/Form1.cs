@@ -17,7 +17,7 @@ namespace HongGuangV2
     {
         static bool automode;
         bool running;
-
+        int t=0;
         int sj = 0;
         //MainLoop ml=new MainLoop();
         Thread autoThread = new Thread(loop);
@@ -58,7 +58,15 @@ namespace HongGuangV2
                         textBox2.ReadOnly = true;
                         automode = true;
                         running = true;
-                        autoThread.Start();
+                        if (t==0)
+                        {
+                            t++;
+                            autoThread.Start();
+                        }
+                        else if (!autoThread.IsAlive)
+                        {
+                            autoThread.Resume();
+                        }
                     }
                 }
             }
@@ -107,6 +115,7 @@ namespace HongGuangV2
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             stoploop();
+            autoThread.Abort();
 //            textBox2.ReadOnly = false;
 //            timer1.Enabled = false;
 //            running = false;
@@ -133,6 +142,7 @@ namespace HongGuangV2
             timer1.Enabled = false;
             automode = false;
             running = false;
+            autoThread.Suspend();
 #if (DEBUG)
             MessageBox.Show("");
 #endif
