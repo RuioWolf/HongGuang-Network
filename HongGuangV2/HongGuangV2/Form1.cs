@@ -2,19 +2,25 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
+using System.Threading;
 
 namespace HongGuangV2
 {
     public partial class Form1 : Form
     {
-        bool automode, running;
+        static bool automode;
+        bool running;
+
         int sj = 0;
+        //MainLoop ml=new MainLoop();
+        Thread autoThread = new Thread(loop);
         public Form1()
         {
             InitializeComponent();
@@ -52,19 +58,20 @@ namespace HongGuangV2
                         textBox2.ReadOnly = true;
                         automode = true;
                         running = true;
-                        loop();
+                        autoThread.Start();
                     }
                 }
             }
             else
             {
-                textBox2.ReadOnly = false;
-                timer1.Enabled = false;
-                automode = false;
-                running = false;
-#if (DEBUG)
-                MessageBox.Show("");
-#endif
+                stoploop();
+//                textBox2.ReadOnly = false;
+//                timer1.Enabled = false;
+//                automode = false;
+//                running = false;
+//#if (DEBUG)
+//                MessageBox.Show("");
+//#endif
             }
         }
 
@@ -74,16 +81,16 @@ namespace HongGuangV2
             Application.DoEvents();
         }
 
-        public void loop()
+        public static void loop()
         {
 #if (DEBUG)
             while (automode)
             {
-                webBrowser1.DocumentText = HttpGet("http://1.1.1.2/ajaxlogout?_t=1473332977129");
-                //HttpGet("http://1.1.1.2/ajaxlogout?_t=1473332977129");
+                //webBrowser1.DocumentText = HttpGet("http://1.1.1.2/ajaxlogout?_t=1473332977129");
+                HttpGet("http://1.1.1.2/ajaxlogout?_t=1473332977129");
             }
 #endif
-#if (DEBUG==false)
+#if (!DEBUG)
             while (automode)
             {
                 //webBrowser1.DocumentText = HttpGet("http://1.1.1.2/ajaxlogout?_t=1473332977129");
@@ -99,26 +106,40 @@ namespace HongGuangV2
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            textBox2.ReadOnly = false;
-            timer1.Enabled = false;
-            running = false;
-            automode = false;
+            stoploop();
+//            textBox2.ReadOnly = false;
+//            timer1.Enabled = false;
+//            running = false;
+//            automode = false;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+            this.Hide();
             this.ShowInTaskbar = false;
         }
 
         private void notifyIcon1_Click(object sender, EventArgs e)
         {
+            this.Show();
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
         }
 
+        private void stoploop()
+        {
+            textBox2.ReadOnly = false;
+            timer1.Enabled = false;
+            automode = false;
+            running = false;
+#if (DEBUG)
+            MessageBox.Show("");
+#endif
+        }
+
         //public string HttpGet(string url, string data)
-        public string HttpGet(string url)
+        public static string HttpGet(string url)
         {
             try
             {
@@ -138,14 +159,52 @@ namespace HongGuangV2
                 stream.Close();
                 response.Close();
 
-                Application.DoEvents();
+                //Application.DoEvents();
 
                 return retString;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return "";
+                return e.Message;
             }
         }
     }
+//
+//    public class MainLoop
+//    {
+//        public string HttpGet(string url)
+//        {
+//            try
+//            {
+//                //创建Get请求
+//                //url = url + (data == "" ? "" : "?") + data;
+//                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+//                request.Method = "GET";
+//                request.ContentType = "text/html;charset=UTF-8";
+//
+//                //接受返回来的数据
+//                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+//                Stream stream = response.GetResponseStream();
+//                StreamReader streamReader = new StreamReader(stream, Encoding.GetEncoding("utf-8"));
+//                string retString = streamReader.ReadToEnd();
+//
+//                streamReader.Close();
+//                stream.Close();
+//                response.Close();
+//
+//                Application.DoEvents();
+//
+//                return retString;
+//            }
+//            catch (Exception)
+//            {
+//                return "";
+//            }
+//        }
+//
+//        public static void LoopGet()
+//        {
+//            MainLoop.LoopGet("http://1.1.1.2/ajaxlogout?_t=1473332977129");
+//        }
+//    }
 }
