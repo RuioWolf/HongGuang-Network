@@ -115,6 +115,7 @@ namespace HongGuangV2
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             stoploop();
+            autoThread.Resume();
             autoThread.Abort();
 //            textBox2.ReadOnly = false;
 //            timer1.Enabled = false;
@@ -144,7 +145,7 @@ namespace HongGuangV2
             running = false;
             autoThread.Suspend();
 #if (DEBUG)
-            MessageBox.Show("");
+            //MessageBox.Show("");
 #endif
         }
 
