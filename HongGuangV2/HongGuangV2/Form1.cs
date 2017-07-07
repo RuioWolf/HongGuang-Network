@@ -17,10 +17,13 @@ namespace HongGuangV2
     {
         static bool automode;
         bool running;
-        int t=0;
+        int t = 0;
+
         int sj = 0;
+
         //MainLoop ml=new MainLoop();
         Thread autoThread = new Thread(loop);
+
         public Form1()
         {
             InitializeComponent();
@@ -58,7 +61,7 @@ namespace HongGuangV2
                         textBox2.ReadOnly = true;
                         automode = true;
                         running = true;
-                        if (t==0)
+                        if (t == 0)
                         {
                             t++;
                             autoThread.Start();
@@ -115,8 +118,11 @@ namespace HongGuangV2
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             stoploop();
-            autoThread.Resume();
-            autoThread.Abort();
+            if (t != 0)
+            {
+                autoThread.Resume();
+                autoThread.Abort();
+            }
 //            textBox2.ReadOnly = false;
 //            timer1.Enabled = false;
 //            running = false;
@@ -143,7 +149,8 @@ namespace HongGuangV2
             timer1.Enabled = false;
             automode = false;
             running = false;
-            autoThread.Suspend();
+            if (t != 0)
+                autoThread.Suspend();
 #if (DEBUG)
             //MessageBox.Show("");
 #endif
@@ -156,12 +163,12 @@ namespace HongGuangV2
             {
                 //创建Get请求
                 //url = url + (data == "" ? "" : "?") + data;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
                 request.Method = "GET";
                 request.ContentType = "text/html;charset=UTF-8";
 
                 //接受返回来的数据
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                HttpWebResponse response = (HttpWebResponse) request.GetResponse();
                 Stream stream = response.GetResponseStream();
                 StreamReader streamReader = new StreamReader(stream, Encoding.GetEncoding("utf-8"));
                 string retString = streamReader.ReadToEnd();
@@ -180,6 +187,7 @@ namespace HongGuangV2
             }
         }
     }
+
 //
 //    public class MainLoop
 //    {
