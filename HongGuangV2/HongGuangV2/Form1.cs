@@ -157,19 +157,6 @@ namespace HongGuangV2
 #endif
         }
 
-        private void stoploop()
-        {
-            textBox2.ReadOnly = false;
-            timer1.Enabled = false;
-            automode = false;
-            running = false;
-            if (t != 0)
-                autoThread.Suspend();
-#if (DEBUG)
-            //MessageBox.Show("");
-#endif
-        }
-
         //public string HttpGet(string url, string data)
         public static string HttpGet(string url)
         {
