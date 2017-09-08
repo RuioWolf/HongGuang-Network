@@ -141,6 +141,7 @@ namespace HongGuangV2
             this.Show();
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
+            this.Activate();
         }
 
         private void stoploop()
